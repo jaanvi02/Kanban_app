@@ -1,0 +1,151 @@
+<!-- The Kanban Board Heading -->
+<html>
+
+<head>
+    <style>
+        .KanbanBoard {
+  display: flex;
+ 
+}
+/* Styles for the first column */
+.column-1 {
+    flex: 1;/* Equal width for all columns */
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: tomato;
+    margin: 10px;
+    min-width: 50px;/* Minimum width to prevent column collapse */
+  }
+/* Styles for the second column */
+.column-2{
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #ffaf00;
+    margin: 10px;
+    min-width: 50px;
+}
+/* Styles for the third column */
+.column-3{
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #95BB33;
+    margin: 10px;
+    min-width: 50px;
+}
+/* Styles for individual tasks within columns */
+  .task {
+    padding: 5px;
+    background-color: white;
+    border: 1px solid #ddd;
+    margin: 5px 0;
+    cursor: move; /* Indicates that tasks can be moved (drag-and-drop) */
+  }
+/* Styles for text within columns */
+.Column-text {
+  color: black;
+  display: flex;
+  flex-direction: row; /* Text alignment in a row */
+  justify-content: center; /* Center text horizontally */
+  font-family: sans-serif;
+}
+    </style>
+</head>
+<body>
+<div class="Kanban-heading">
+  <center>
+    <h1>KANBAN BOARD</h1>
+  </center>
+</div>
+
+<!-- The Main Kanban Board Container -->
+<div class="KanbanBoard">
+  
+  <!-- Column for To-Do Tasks -->
+  <div class="column-1" id="todo"> 
+     <strong class="Column-text">To-do</strong>
+    <!-- The 'draggable="true"' attribute allows these tasks to be draggable -->
+    <div class="task" draggable="true">Task 1</div>
+    <div class="task" draggable="true">Task 2</div>
+  </div>
+  
+  <!-- Column for Tasks Doing container -->
+  <div class="column-2" id="doing">
+    <strong class="Column-text">Doing</strong>
+    <div class="task" draggable="true">Task 3</div>
+  </div>
+  
+  <!-- Column for Completed Tasks -->
+  <div class="column-3" id="done">
+    <strong class="Column-text">Done</strong>
+    <div class="task" draggable="true">Task 4</div>
+    <div class="task" draggable="true">Task 5</div>
+  </div>
+</div>
+</body>
+<script>
+    // Select all tasks on the Kanban board
+const cards = document.querySelectorAll('.task');
+
+// Select all columns (column-1, column-2, column-3) on the Kanban board
+const columns = document.querySelectorAll('.column-1, .column-2, .column-3');
+
+// Add drag-and-drop event listeners to each task
+cards.forEach(card => {
+  card.addEventListener('dragstart', dragStart); // When dragging starts
+  card.addEventListener('dragend', dragEnd);     // When dragging ends
+});
+
+// Add drag-and-drop event listeners to each column
+columns.forEach(column => {
+  column.addEventListener('dragover', dragOver);   // When dragging over
+  column.addEventListener('dragenter', dragEnter); // When card enters
+  column.addEventListener('dragleave', dragLeave); // When card leaves
+  column.addEventListener('drop', drop);           // When card is dropped
+});
+
+// Initialize a variable to keep track of the dragged card
+let draggedCard = null;
+
+// Function when dragging starts
+function dragStart(event) {
+  draggedCard = event.target;
+  // Hide the card with a slight delay to prevent flickering
+  setTimeout(() => {
+    event.target.style.display = 'none';
+  }, 0);
+}
+
+// Function when dragging ends
+function dragEnd() {
+  draggedCard.style.display = 'block';
+  draggedCard = null;
+}
+
+// Function to prevent the default drag-over behavior
+function dragOver(event) {
+  event.preventDefault();
+}
+
+// Function when a card enters a column
+function dragEnter(event) {
+  event.target.classList.add('hovered'); // Add a visual indicator
+}
+
+// Function when a card leaves a column
+function dragLeave(event) {
+  event.target.classList.remove('hovered'); // Remove the visual indicator
+}
+
+// Function when a card is dropped
+function drop(event) {
+  event.target.classList.remove('hovered'); // Remove the visual indicator
+  if (event.target.classList.contains('task')) {
+    event.target.parentNode.appendChild(draggedCard); // Append to the parent if dropped on another card
+  } else {
+    event.target.appendChild(draggedCard); // Append to the column if dropped elsewhere
+  }
+}
+</script>
+</html>
